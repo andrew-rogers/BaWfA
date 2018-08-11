@@ -71,6 +71,30 @@ bawfa() {
       bawfa find_wget
     ;;
 
+    "get_script" )
+      local script=$1
+      local bawfa_dir="$(bawfa find_appdata_dir)/BaWfA"
+      if [ -e "$bawfa_dir/utils/$script" ]; then
+        echo "$bawfa_dir/utils/$script"
+      else
+        local url="https://github.com/andrew-rogers/BaWfA/raw/master/$script"
+        $(bawfa find_wget) --no-clobber --no-check-certificate --directory-prefix=$bawfa_dir/utils $url
+        if [ -e "$bawfa_dir/utils/$script" ]; then
+          echo "$bawfa_dir/utils/$script"
+        else
+          echo "Failed to download $script" >&2
+          return 1
+        fi
+      fi
+    ;;
+
+    "check_busybox" )
+      local script="$(bawfa get_script busybox-setup.sh)"
+      if [ -e "$script" ]; then
+        sh -c "BAWFA_DIR=$(bawfa find_appdata_dir)/BaWfA; . $script"
+      fi
+    ;;
+
     * )
       echo "unknown command: $cmd" >&2 
   esac
@@ -78,6 +102,8 @@ bawfa() {
 
 if [ ! -d "BAWFA_DIR" ]; then
   bawfa check_wget > /dev/null
+  bawfa get_script bawfa-setup.sh
+  bawfa check_busybox
 
   cd "$(bawfa find_appdata_dir)/BaWfA" > /dev/null 2>&1 || cd "$(bawfa find_appdata_dir)"
 fi
