@@ -16,16 +16,6 @@
 #    with this program; if not, write to the Free Software Foundation, Inc.,
 #    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-check_busybox()
-{
-    busybox_install
-}
-
-second_stage_check()
-{
-    echo "Not yet implemented!"
-}
-
 cmd=$1
 shift
 
@@ -37,5 +27,5 @@ shift
 if [ -n "$cmd" ]; then
     $cmd $*
 else
-    second_stage_check
+    echo "Command not specified." >&2
 fi

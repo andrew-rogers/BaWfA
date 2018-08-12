@@ -71,28 +71,49 @@ bawfa() {
       bawfa find_wget
     ;;
 
+    "download" )
+      local url="$1"
+      local dst_dir="$2"
+      local fn=${url##*/} # Get the filename from the end of the URL.
+      local wget=$(bawfa find_wget)
+
+      [ -z "$dst_dir" ] && dst_dir=/sdcard/Download
+
+      # Attempt the download if file doesn't exist
+      if [ ! -e "$dst_dir/$fn" ]; then
+        if [ -e "$wget" ]; then
+          "$wget" --no-clobber --no-check-certificate --directory-prefix=$dst_dir $url
+        else
+          echo "Cannot locate wget" >&2
+        fi
+      fi
+
+      # If downloaded then return the path
+      if [ -e "$dst_dir/$fn" ]; then
+        echo "$dst_dir/$fn"
+      fi
+    ;;
+
     "get_script" )
-      local script=$1
+      local script="$1"
+      local app_dir=$(bawfa find_appdata_dir)
+      local bawfa_dir="$app_dir/BaWfA"
+      local dst_dir="$bawfa_dir/utils"
       local bawfa_dir="$(bawfa find_appdata_dir)/BaWfA"
 
       # If script already downloaded then just return it's path.
-      if [ -e "$bawfa_dir/utils/$script" ]; then
-        echo "$bawfa_dir/utils/$script"
+      if [ -e "$dst_dir/$script" ]; then
+        echo "$dst_dir/$script"
 
       else
 
         # Attempt to download the script
         local url="https://github.com/andrew-rogers/BaWfA/raw/master/$script"
-        local wget=$(bawfa find_wget)
-        if [ -e "$wget" ]; then
-          "$wget" --no-clobber --no-check-certificate --directory-prefix=$bawfa_dir/utils $url
-        else
-          echo "Cannot locate wget" >&2
-        fi
+        $(bawfa download "$url" "$dst_dir")
 
         # If script downloaded then just return it's path.
-        if [ -e "$bawfa_dir/utils/$script" ]; then
-          echo "$bawfa_dir/utils/$script"
+        if [ -e "$dst_dir/$script" ]; then
+          echo "$dst_dir/$script"
         else
           echo "Failed to download $script" >&2
           return 1
