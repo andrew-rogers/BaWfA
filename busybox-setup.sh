@@ -17,9 +17,8 @@
 #    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 busybox_install() {
-  echo "Not yet implemented!"
-  set
+    set
+    echo "Busybox installer not yet implemented!"
 }
 
-busybox_install
 

@@ -16,21 +16,26 @@
 #    with this program; if not, write to the Free Software Foundation, Inc.,
 #    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-bd_getscripts()
+check_busybox()
 {
-    bd_getscript bawfa-setup.sh
-    bd_getscript busybox-setup.sh
-    bd_getscript second-stage.sh
+    busybox_install
 }
 
-bd_getscript()
+second_stage_check()
 {
-    if [ -z "$1" ]; then
-        bd_getscripts
-    else
-        local src="/sdcard/Download/$1"
-        local dst="$(bawfa find_appdata_dir)/BaWfA/utils/$1"
-        [ -e "$src" ] && cat "$src" > "$dst"
-    fi
+    echo "Not yet implemented!"
 }
 
+cmd=$1
+shift
+
+. "$BAWFA_SETUP" "no_init"
+
+# Include Busybox setup functions
+. "$(bawfa get_script busybox-setup.sh)"
+
+if [ -n "$cmd" ]; then
+    $cmd $*
+else
+    second_stage_check
+fi

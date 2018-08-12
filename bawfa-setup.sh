@@ -88,15 +88,11 @@ bawfa() {
       fi
     ;;
 
-    "check_busybox" )
-      local script="$(bawfa get_script busybox-setup.sh)"
-      if [ -e "$script" ]; then
-        sh -c "BAWFA_DIR=$(bawfa find_appdata_dir)/BaWfA; . $script"
-      fi
-    ;;
-
     * )
-      echo "unknown command: $cmd" >&2 
+      local script="$(bawfa get_script second-stage.sh)"
+      if [ -e "$script" ]; then
+        sh -c "BAWFA_SETUP=$(bawfa get_script bawfa-setup.sh); . $script $cmd"
+      fi
   esac
 }
 
@@ -105,10 +101,10 @@ if [ "$1" == "dev" ]; then
   . /sdcard/Download/bawfa-dev.sh
 fi
 
-if [ ! -d "BAWFA_DIR" ]; then
+# Only run the below if not included by second-stage. Second stage must specify no_init when including this script.
+if [ "$1" != "no_init" ];then
   bawfa check_wget > /dev/null
-  bawfa get_script bawfa-setup.sh
-  bawfa check_busybox
+  bawfa check_busybox > /dev/null
 
   cd "$(bawfa find_appdata_dir)/BaWfA" > /dev/null 2>&1 || cd "$(bawfa find_appdata_dir)"
 fi
