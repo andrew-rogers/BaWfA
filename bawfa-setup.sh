@@ -38,7 +38,7 @@ bawfa() {
       else
         # Find the directory of the terminal app. The terminal app may only be able 
         # to write to and execute from its directory or sub directory.
-        echo "/data/data/$(cat /proc/$PPID/cmdline)/"
+        echo "/data/data/$(cat /proc/$PPID/cmdline)"
       fi
     ;;
 
@@ -74,17 +74,30 @@ bawfa() {
     "get_script" )
       local script=$1
       local bawfa_dir="$(bawfa find_appdata_dir)/BaWfA"
+
+      # If script already downloaded then just return it's path.
       if [ -e "$bawfa_dir/utils/$script" ]; then
         echo "$bawfa_dir/utils/$script"
+
       else
+
+        # Attempt to download the script
         local url="https://github.com/andrew-rogers/BaWfA/raw/master/$script"
-        $(bawfa find_wget) --no-clobber --no-check-certificate --directory-prefix=$bawfa_dir/utils $url
+        local wget=$(bawfa find_wget)
+        if [ -e "$wget" ]; then
+          "$wget" --no-clobber --no-check-certificate --directory-prefix=$bawfa_dir/utils $url
+        else
+          echo "Cannot locate wget" >&2
+        fi
+
+        # If script downloaded then just return it's path.
         if [ -e "$bawfa_dir/utils/$script" ]; then
           echo "$bawfa_dir/utils/$script"
         else
           echo "Failed to download $script" >&2
           return 1
         fi
+
       fi
     ;;
 
@@ -103,9 +116,10 @@ fi
 
 # Only run the below if not included by second-stage. Second stage must specify no_init when including this script.
 if [ "$1" != "no_init" ];then
+  cd "$(bawfa find_appdata_dir)"
   bawfa check_wget > /dev/null
   bawfa check_busybox > /dev/null
 
-  cd "$(bawfa find_appdata_dir)/BaWfA" > /dev/null 2>&1 || cd "$(bawfa find_appdata_dir)"
+  cd "$(bawfa find_appdata_dir)/BaWfA"
 fi
 
