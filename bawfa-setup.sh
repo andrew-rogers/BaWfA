@@ -100,6 +100,11 @@ bawfa() {
   esac
 }
 
+# Check if developer mode enabled
+if [ "$1" == "dev" ]; then
+  . /sdcard/Download/bawfa-dev.sh
+fi
+
 if [ ! -d "BAWFA_DIR" ]; then
   bawfa check_wget > /dev/null
   bawfa get_script bawfa-setup.sh
