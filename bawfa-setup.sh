@@ -121,5 +121,6 @@ if [ "$1" != "no_init" ];then
   bawfa check_busybox > /dev/null
 
   cd "$(bawfa find_appdata_dir)/BaWfA"
+  PS1="\${PWD##$(bawfa find_appdata_dir)/} $ "
 fi
 
