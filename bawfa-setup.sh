@@ -143,5 +143,6 @@ if [ "$1" != "no_init" ];then
 
   cd "$(bawfa find_appdata_dir)/BaWfA"
   PS1="\${PWD##$(bawfa find_appdata_dir)/} $ "
+  PATH="$(bawfa find_appdata_dir)/BaWfA/bin"
 fi
 
