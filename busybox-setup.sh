@@ -28,7 +28,10 @@ BIN_DIR="$(bawfa find_appdata_dir)/BaWfA/bin"
 
 check_busybox()
 {
-  "$BIN_DIR/$BB" true 2> /dev/null || busybox_install
+  if [ -x "$BIN_DIR/$BB" ]; then
+    "$BIN_DIR/true" 2> /dev/null && echo "BusyBox is installed in $BIN_DIR" >&2 && echo "$BIN_DIR/$BB" && return 0
+  fi
+  busybox_install
 }
 
 busybox_install()
@@ -49,8 +52,7 @@ busybox_install()
     "$bb_dl" mv "$bb_dl" "$BIN_DIR/$BB"
   fi
 
-  #msg "Making symlinks for busybox applets, could take a while."
-  #busybox_symlinks
+  busybox_symlinks
 }
 
 busybox_download()
@@ -62,3 +64,21 @@ busybox_download()
     [ -n "$bb_dl" ] && echo "$bb_dl" && break
   done
 }
+
+busybox_symlinks() {
+  echo "Making symlinks for busybox applets, could take a while." >&2
+  for app in $($BIN_DIR/$BB --list)
+  do
+    # Create links for all apps except wget, the busybox wget doesn't work on android.
+    if [ "$app" != "wget" ]; then
+      busybox_symlink "$app"
+    fi
+  done
+}
+
+busybox_symlink() {
+  if [ ! -e "$BIN_DIR/$1" ]; then
+    ( cd "$BIN_DIR" && $BIN_DIR/$BB ln -s $BB $1 )
+  fi
+}
+
