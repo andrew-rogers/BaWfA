@@ -125,7 +125,7 @@ bawfa() {
     * )
       local script="$(bawfa get_script second-stage.sh)"
       if [ -e "$script" ]; then
-        sh -c "BAWFA_SETUP=$(bawfa get_script bawfa-setup.sh); . $script $cmd"
+        sh -c "BAWFA_SETUP=$(bawfa get_script bawfa-setup.sh); . $script $cmd $*"
       fi
   esac
 }

@@ -21,6 +21,7 @@ bd_getscripts()
     bd_getscript bawfa-setup.sh
     bd_getscript busybox-setup.sh
     bd_getscript second-stage.sh
+    bd_getscript installer.sh
 }
 
 bd_getscript()

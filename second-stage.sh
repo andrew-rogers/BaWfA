@@ -24,6 +24,9 @@ shift
 # Include Busybox setup functions
 . "$(bawfa get_script busybox-setup.sh)"
 
+# Include Installer functions
+. "$(bawfa get_script installer.sh)"
+
 if [ -n "$cmd" ]; then
     $cmd $*
 else
