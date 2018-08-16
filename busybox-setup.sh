@@ -53,6 +53,7 @@ busybox_install()
   fi
 
   busybox_symlinks
+  busybox_postinstall
 }
 
 busybox_download()
@@ -65,7 +66,8 @@ busybox_download()
   done
 }
 
-busybox_symlinks() {
+busybox_symlinks()
+{
   echo "Making symlinks for busybox applets, could take a while." >&2
   for app in $($BIN_DIR/$BB --list)
   do
@@ -76,9 +78,22 @@ busybox_symlinks() {
   done
 }
 
-busybox_symlink() {
+busybox_symlink()
+{
   if [ ! -e "$BIN_DIR/$1" ]; then
     ( cd "$BIN_DIR" && $BIN_DIR/$BB ln -s $BB $1 )
+  fi
+}
+
+busybox_postinstall()
+{
+  # Get mkshexec and make it executable
+  local url="https://github.com/andrew-rogers/BaWfA/raw/master/mkshexec"
+  local dst_dir="$(bawfa find_appdata_dir)/BaWfA/bin"
+  local dst=$(bawfa download "$url" "$dst_dir")
+
+  if [ -f "$dst" ]; then
+    sh "$dst" "$dst" # Run shexec on itself so that it is executable.
   fi
 }
 
