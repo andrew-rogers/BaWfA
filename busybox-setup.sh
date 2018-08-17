@@ -93,7 +93,7 @@ busybox_postinstall()
   local dst=$(bawfa download "$url" "$dst_dir")
 
   if [ -f "$dst" ]; then
-    sh "$dst" "$dst" # Run shexec on itself so that it is executable.
+    ( PATH="$dst_dir"; sh "$dst" "$dst" ) # Run mkshexec on itself so that it is executable.
   fi
 }
 
