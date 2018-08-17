@@ -16,12 +16,7 @@
 #    with this program; if not, write to the Free Software Foundation, Inc.,
 #    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-URL=https://github.com/andrew-rogers/AndrewWIDE/archive/master.zip
-TEMP_DIR=$(bawfa find_appdata_dir)/BaWfA/tmp
+REPO="AndrewWIDE"
 
-DST=$(bawfa download "$URL" "$TEMP_DIR")
-
-( cd "$TEMP_DIR" && unzip "$DST" )
-
-mv "$TEMP_DIR/AndrewWIDE-master" "$(bawfa find_appdata_dir)/AndrewWIDE"
+unzip_github_repo "$REPO"
 

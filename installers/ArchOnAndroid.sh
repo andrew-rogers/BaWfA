@@ -1,5 +1,5 @@
 
-#    BaWfA - install Busybox and Wget on Android into terminal app
+#    BaWfA - Installer for ArchOnAndroid
 #    Copyright (C) 2018  Andrew Rogers
 #
 #    This program is free software; you can redistribute it and/or modify
@@ -16,24 +16,7 @@
 #    with this program; if not, write to the Free Software Foundation, Inc.,
 #    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-install()
-{
-    local url="https://github.com/andrew-rogers/BaWfA/raw/master/installers/$1.sh"
-    local dst_dir="$(bawfa find_appdata_dir)/BaWfA/installers"
-    local dst=$(bawfa download "$url" "$dst_dir")
-    . "$dst"
-}
+REPO="ArchOnAndroid"
 
-unzip_github_repo()
-{
-    local repo="$1"
-    local url="https://github.com/andrew-rogers/$repo/archive/master.zip"
-    local temp_dir=$(bawfa find_appdata_dir)/BaWfA/tmp
+unzip_github_repo "$REPO"
 
-    rm -f "$temp_dir/master.zip"
-    local dst=$(bawfa download "$url" "$temp_dir")
-
-    ( cd "$temp_dir" && unzip "$dst" )
-
-    mv "$temp_dir/$repo-master" "$(bawfa find_appdata_dir)/$repo"
-}
