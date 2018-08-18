@@ -23,6 +23,11 @@ bawfa() {
   local cmd=$1
   shift
 
+  if [ "$cmd" != "find_appdata_dir" ]; then
+    local app_dir=$(bawfa find_appdata_dir)
+    local bawfa_dir="$app_dir/BaWfA"
+  fi
+
   case $cmd in
 
     "find_appdata_dir" | "fad" )
@@ -43,8 +48,6 @@ bawfa() {
     ;;
 
     "find_wget" )
-      local app_dir=$(bawfa find_appdata_dir)
-      local bawfa_dir="$app_dir/BaWfA"
       if [ -e "$bawfa_dir/bin/wget" ]; then
         echo "$bawfa_dir/bin/wget"
       elif [ -e "$app_dir/wget" ]; then
@@ -54,7 +57,6 @@ bawfa() {
     ;;
 
     "install_wget" )
-      local app_dir=$(bawfa find_appdata_dir)
       if [ ! -e "$app_dir/wget" ]; then
         # not in $FILES_DIR/wget so copy from download directory
         [ ! -f "$WGET_DL" ] && echo "Can't find: $WGET_DL" >&2 && return 1
@@ -96,10 +98,7 @@ bawfa() {
 
     "get_script" )
       local script="$1"
-      local app_dir=$(bawfa find_appdata_dir)
-      local bawfa_dir="$app_dir/BaWfA"
       local dst_dir="$bawfa_dir/utils"
-      local bawfa_dir="$(bawfa find_appdata_dir)/BaWfA"
 
       # If script already downloaded then just return it's path.
       if [ -e "$dst_dir/$script" ]; then
@@ -120,6 +119,12 @@ bawfa() {
         fi
 
       fi
+    ;;
+
+    "startup" )
+      for file in $(find "$bawfa_dir/etc/startup.d/" 2> /dev/null); do
+        . "$file"
+      done
     ;;
 
     * )
@@ -144,5 +149,6 @@ if [ "$1" != "no_init" ];then
   cd "$(bawfa find_appdata_dir)/BaWfA"
   PS1="\${PWD##$(bawfa find_appdata_dir)/} $ "
   PATH="$(bawfa find_appdata_dir)/BaWfA/bin"
+  bawfa startup
 fi
 
