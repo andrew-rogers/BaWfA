@@ -20,3 +20,8 @@ REPO="AndrewWIDE"
 
 unzip_github_repo "$REPO"
 
+# Post install setup
+mkshexec "$ROOT/aw-services.sh"
+echo "$ROOT/aw-services.sh start" > "$STARTUP_DIR/$REPO.sh"
+"$ROOT/aw-services.sh" start
+

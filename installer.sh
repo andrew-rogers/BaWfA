@@ -16,11 +16,15 @@
 #    with this program; if not, write to the Free Software Foundation, Inc.,
 #    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+STARTUP_DIR="$(bawfa find_appdata_dir)/BaWfA/etc/startup.d"
+ROOT=
+
 install()
 {
     local url="https://github.com/andrew-rogers/BaWfA/raw/master/installers/$1.sh"
     local dst_dir="$(bawfa find_appdata_dir)/BaWfA/installers"
     local dst=$(bawfa download "$url" "$dst_dir")
+    mkdir -p "$STARTUP_DIR"
     . "$dst"
 }
 
@@ -36,4 +40,7 @@ unzip_github_repo()
     ( cd "$temp_dir" && unzip "$dst" )
 
     mv "$temp_dir/$repo-master" "$(bawfa find_appdata_dir)/$repo"
+
+    # Set the ROOT variable to point to base on install location.
+    ROOT="$(bawfa find_appdata_dir)/$REPO"
 }
