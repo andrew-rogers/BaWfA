@@ -95,5 +95,8 @@ busybox_postinstall()
   if [ -f "$dst" ]; then
     ( PATH="$dst_dir"; sh "$dst" "$dst" ) # Run mkshexec on itself so that it is executable.
   fi
+
+  # Relocate the wget binary
+  mv "$(bawfa find_wget)" "$BIN_DIR/wget"
 }
 
