@@ -61,7 +61,7 @@ busybox_download()
   local bb
   echo "$BB_URLS" | while read -r bb
   do
-    local bb_dl=$(bawfa download $bb $BIN_DIR)
+    local bb_dl=$(bawfa download "$bb" "$BIN_DIR")
     [ -n "$bb_dl" ] && echo "$bb_dl" && break
   done
 }
@@ -69,7 +69,7 @@ busybox_download()
 busybox_symlinks()
 {
   echo "Making symlinks for busybox applets, could take a while." >&2
-  for app in $($BIN_DIR/$BB --list)
+  for app in $("$BIN_DIR/$BB" --list)
   do
     # Create links for all apps except wget, the busybox wget doesn't work on android.
     if [ "$app" != "wget" ]; then
@@ -81,7 +81,7 @@ busybox_symlinks()
 busybox_symlink()
 {
   if [ ! -e "$BIN_DIR/$1" ]; then
-    ( cd "$BIN_DIR" && $BIN_DIR/$BB ln -s $BB $1 )
+    ( cd "$BIN_DIR" && "$BIN_DIR/$BB" ln -s "$BB" $1 )
   fi
 }
 
@@ -97,6 +97,6 @@ busybox_postinstall()
   fi
 
   # Relocate the wget binary
-  mv "$(bawfa find_wget)" "$BIN_DIR/wget"
+  "$BIN_DIR/$BB" mv "$(bawfa find_wget)" "$BIN_DIR/wget"
 }
 
