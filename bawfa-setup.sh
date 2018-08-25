@@ -122,6 +122,13 @@ bawfa() {
     ;;
 
     "startup" )
+
+      # Setup the environment variables
+      for file in $(find "$bawfa_dir/etc/env.d/" 2> /dev/null); do
+        . "$file"
+      done
+
+      # Startup the services
       for file in $(find "$bawfa_dir/etc/startup.d/" 2> /dev/null); do
         . "$file"
       done

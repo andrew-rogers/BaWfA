@@ -20,7 +20,10 @@ REPO="ArchOnAndroid"
 
 unzip_github_repo "$REPO"
 
-# Post install setup
+# Create env file
+(cd "$ENV_DIR" && ln -s "$ROOT/etc/aoa-settings.sh")
+
+# Create startup file
 echo "export AOA_DIR=\"$ROOT\"" > "$STARTUP_DIR/$REPO.sh"
 echo ". \"\$AOA_DIR/utils/aoa-startup.sh\"" >> "$STARTUP_DIR/$REPO.sh"
 
